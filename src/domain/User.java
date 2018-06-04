@@ -1,6 +1,14 @@
 package domain;
 
-import java.time.LocalDateTime;
+
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
+
+
+import database.UserDAO;
+
 
 public class User {
 
@@ -12,7 +20,7 @@ public class User {
 	private String email;
 	private String role;
 	private String image;
-	private LocalDateTime registrationmoment;
+	private Date registrationMoment;
 
 	public User() {
 	}
@@ -27,11 +35,22 @@ public class User {
 		this.setEmail(email);
 		this.setRole(role);
 		this.setImage(image);
-		LocalDateTime localdatetime = LocalDateTime.now();
-		this.setRegistrationmoment(localdatetime);
+		Date datetime = new Date();
+		this.setRegistrationMoment(datetime);
 
 	}
 
+	private static UserDAO userDAO = new UserDAO();
+
+	public void addUsers() throws SQLException {
+		userDAO.addUsers(this);
+	}
+	
+	
+	public List<User> getUsers() throws SQLException {
+		return UserDAO.getUsers();
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -88,13 +107,7 @@ public class User {
 		this.image = image;
 	}
 
-	public LocalDateTime getRegistrationmoment() {
-		return registrationmoment;
-	}
 
-	public void setRegistrationmoment(LocalDateTime registrationmoment) {
-		this.registrationmoment = registrationmoment;
-	}
 
 	public int getId() {
 		return id;
@@ -102,5 +115,13 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Date getRegistrationMoment() {
+		return registrationMoment;
+	}
+
+	public void setRegistrationMoment(Date registrationMoment) {
+		this.registrationMoment = registrationMoment;
 	}
 }
