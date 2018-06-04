@@ -1,11 +1,16 @@
 package domain;
 
-import java.time.LocalDateTime;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import database.PostDAO;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -13,32 +18,53 @@ public class Post {
 	@XmlAttribute
 	private int id;
 	@XmlAttribute
-	private LocalDateTime creationDate;
+	private Date creationDate;
 	@XmlAttribute
-	private LocalDateTime editionDate;
+	private Date editionDate;
 	@XmlAttribute
 	private String	 text;
 	@XmlAttribute
+	private List<Tag> tags;
+	/*
+	@XmlAttribute
 	private int responsePostId;
+*/
+	public Post() {
+		this.tags=new ArrayList<Tag>();
+	}
 	
-
-	public Post() {}
-	
-	public Post (int id, LocalDateTime creationDate, LocalDateTime editionDate, String text,int responsePostId) {
+	/*public Post (int id, LocalDateTime creationDate, LocalDateTime editionDate, String text,int responsePostId) {
 		this.id = id;
 		this.creationDate = creationDate;
 		this.editionDate = editionDate;
 		this.text = text;
 		this.responsePostId = responsePostId;
-	}
-	public Post (int id, LocalDateTime creationDate, LocalDateTime editionDate, String text) {
+	}*/
+	public Post (int id, Date creationDate, Date editionDate, String text) {
 		this.id = id;
 		this.creationDate = creationDate;
 		this.editionDate = editionDate;
 		this.text = text;
-		this.responsePostId = 0;
+		this.tags=new ArrayList<Tag>();
+		//this.responsePostId = 0;
 	}
 
+	private static PostDAO postDAO = new PostDAO();
+
+	public void addPost() throws SQLException {
+		postDAO.addPost(this);
+	}
+	public static void removePost(int id) throws SQLException {
+		postDAO.removePost(id);
+	}
+	public static void updatePost(int id,String text) throws SQLException {
+		postDAO.updatePost(id,text);
+	}
+
+	public static List<Post> getPosts() throws SQLException {
+		return postDAO.getPosts();
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -47,19 +73,19 @@ public class Post {
 		this.id = id;
 	}
 
-	public LocalDateTime getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(LocalDateTime creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
-	public LocalDateTime getEditionDate() {
+	public Date getEditionDate() {
 		return editionDate;
 	}
 
-	public void setEditionDate(LocalDateTime editionDate) {
+	public void setEditionDate(Date editionDate) {
 		this.editionDate = editionDate;
 	}
 
@@ -70,7 +96,7 @@ public class Post {
 	public void setText(String text) {
 		this.text = text;
 	}
-
+/*
 	public int getResponsePostId() {
 		return responsePostId;
 	}
@@ -78,5 +104,13 @@ public class Post {
 	public void setResponsePostId(int responsePostId) {
 		this.responsePostId = responsePostId;
 	}
-	
+	*/
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
 }
