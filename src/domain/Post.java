@@ -20,11 +20,17 @@ public class Post {
 	@XmlAttribute
 	private Date creationDate;
 	@XmlAttribute
+	private boolean edited;
+	@XmlAttribute
 	private Date editionDate;
 	@XmlAttribute
 	private String	 text;
 	@XmlAttribute
 	private List<Tag> tags;
+	@XmlAttribute
+	private User user;
+	
+
 	/*
 	@XmlAttribute
 	private int responsePostId;
@@ -112,5 +118,19 @@ public class Post {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public boolean isEdited() {
+		return edited;
+	}
+
+	public void setEdited(boolean edited) {
+		this.edited = edited;
 	}
 }

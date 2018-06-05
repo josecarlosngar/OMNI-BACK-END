@@ -12,12 +12,52 @@ import java.util.List;
 
 
 import database.DatabaseConnectionFactory;
-
+import domain.Tag;
 import domain.User;
 
 public class UserDAO {
 
-	
+	public static User login(String email, String password) throws SQLException {
+		  //get connection from connection pool
+		  Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
+
+		  User user=new User();
+		  Statement stmt = null;
+		  ResultSet rs = null;
+		  try {
+		    stmt = con.createStatement();
+
+		/*StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
+			      .append("user.password as password, user.name as name, user.surname as surname, ")
+			      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
+			      .append("from User where user.email='"+email+"' and user.password='"+password+"' order by user.id");*/
+		    
+		    StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
+		      .append("user.password as password, user.name as name, user.surname as surname, ")
+		      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
+		      .append("from User where user.email='Goku@dragonball.com' and user.password='goku' order by user.id");
+		//execute the query
+		    rs = stmt.executeQuery(sb.toString());
+
+		
+		    
+		      user.setId(rs.getInt("id"));
+		      user.setUsername(rs.getString("username"));
+		      user.setPassword(rs.getString("password"));
+		      user.setName(rs.getString("name"));
+		      user.setSurname(rs.getString("surname"));
+		      user.setEmail(rs.getString("email"));
+		      user.setRole(rs.getString("role"));
+		      user.setImage(rs.getString("image"));
+		      user.setRegistrationMoment(rs.getDate("registrationMoment"));
+		    return user;
+		  }
+		  finally {
+			  try {if (rs != null) rs.close();} catch (SQLException e) {}
+			  try {if (stmt != null) stmt.close();} catch (SQLException e) {}
+			  try {con.close();} catch (SQLException e) {}
+			  }
+			}
 	 public void addUsers (User user) throws SQLException {
 		    //get connection from connection pool
 		    Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();

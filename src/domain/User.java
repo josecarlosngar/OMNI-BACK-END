@@ -5,21 +5,35 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import database.UserDAO;
 
-
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class User {
-
+	@XmlAttribute
 	private int id;
+	@JsonIgnore
 	private String username;
+	@JsonIgnore
 	private String password;
+	@XmlAttribute
 	private String name;
+	@XmlAttribute
 	private String surname;
+	@JsonIgnore
 	private String email;
+	@JsonIgnore
 	private String role;
+	@XmlAttribute
 	private String image;
+	@XmlAttribute
 	private Date registrationMoment;
 
 	public User() {
@@ -49,6 +63,9 @@ public class User {
 	
 	public List<User> getUsers() throws SQLException {
 		return UserDAO.getUsers();
+	}
+	public static User login(String email, String password) throws SQLException {
+		return UserDAO.login(email,password);
 	}
 	
 	public String getUsername() {

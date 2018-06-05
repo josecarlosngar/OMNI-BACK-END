@@ -1,10 +1,16 @@
 package domain;
 
 
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import database.PostDAO;
+import database.TagDAO;
 
 
 @XmlRootElement
@@ -15,7 +21,15 @@ public class Tag {
 	@XmlAttribute
 	private String name;
 	
+	private static TagDAO tagDAO = new TagDAO();
+
 	
+	public static List<Tag> getTagsPost(int postId) throws SQLException {
+		return tagDAO.getTagsPost(postId);
+	}
+	public static List<Tag> getTags() throws SQLException {
+		return tagDAO.getTags();
+	}
 
 
 	public Tag() {

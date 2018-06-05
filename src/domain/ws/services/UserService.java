@@ -4,9 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -29,5 +32,20 @@ public class UserService {
 		 users= UserDAO.getUsers();
 		 return users;
 		}
+	  
+	  @POST
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Path("login")
+	  public User login(@FormParam("email")String email,@FormParam("password")String password) {
+		 User res;
+		 try {
+				res = User.login(email,password);
+			} catch (SQLException e) {
+				res=new User();
+			}
+	    return res;
+	  }
+	  
+	  
 	}
 

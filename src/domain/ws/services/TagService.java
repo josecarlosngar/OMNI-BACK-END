@@ -9,34 +9,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.mysql.fabric.Response;
 
 import domain.Post;
+import domain.Tag;
 
 
-@Path("/post")
-public class PostService {
+@Path("/tag")
+public class TagService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("get")
-  public List<Post> getPosts () {
-	 List<Post> res=new ArrayList<Post>();
+  public List<Tag> getTags () {
+	 List<Tag> res=new ArrayList<Tag>();
 	try {
-		res = Post.getPosts();
+		res = Tag.getTags();
 	} catch (SQLException e) {
-		res.add(new Post());
+		res.add(new Tag());
 	}
 	
     return res;
   }
   
- 
-  
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  @Path("text")
-  public String text () {
-	return "hola";
-  }
 }
