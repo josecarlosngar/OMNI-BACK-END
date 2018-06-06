@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import domain.Post;
@@ -16,26 +19,36 @@ import domain.User;
 import database.DatabaseConnectionFactory;
 
 public class PostDAO {
+private static PostTagDAO postTagDAO = new PostTagDAO();
 
-  public static void addPost (Post post) throws SQLException {
+  public static void addPost (int userId, String text, List<Integer> tagIds) throws SQLException {
     //get connection from connection pool
     Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
     try {
-      final String sql = "insert into Post (creationDate,edited, editionDate,text,likes,dislikes,userId) values (?,0,?,?,0,0,null)";
+      final String sql = "insert into Post (creationDate,edited, editionDate,text,likes,dislikes,userId) values (?,0,?,?,0,0,?)";
       //create the prepared statement with an option to get auto-generated keys
       PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       //set parameters
-      stmt.setString(1, post.getCreationDate().toString());
-      stmt.setString(2, post.getEditionDate().toString());
-      stmt.setString(3, post.getText());
+      Date now=new Date();
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String creationMoment = df.format(now);
+      stmt.setString(1, creationMoment);
+      stmt.setString(2, creationMoment);
+      stmt.setString(3, text);
+      stmt.setInt(4, userId);
 
       stmt.execute();
 
       //Get auto-generated keys
       ResultSet rs = stmt.getGeneratedKeys();
 
-      if (rs.next())
-        post.setId(rs.getInt(1));
+      if (rs.next()) {
+    	 int postId=rs.getInt(1);
+    	for(int tagId: tagIds) {
+    		postTagDAO.addPostTag(postId, tagId);
+    	}
+        
+      }
 
       rs.close();
       stmt.close();

@@ -57,8 +57,8 @@ public class Post {
 
 	private static PostDAO postDAO = new PostDAO();
 
-	public void addPost() throws SQLException {
-		postDAO.addPost(this);
+	public static void addPost(int userId, String text, List<Integer> tagIds) throws SQLException {
+		postDAO.addPost(userId,text,tagIds);
 	}
 	public static void removePost(int id) throws SQLException {
 		postDAO.removePost(id);
