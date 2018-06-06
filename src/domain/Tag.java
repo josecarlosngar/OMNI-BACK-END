@@ -30,7 +30,9 @@ public class Tag {
 	public static List<Tag> getTags() throws SQLException {
 		return tagDAO.getTags();
 	}
-
+	public static List<Tag> getSearchTags(String search) throws SQLException {
+		return tagDAO.getSearchTags(search);
+	}
 
 	public Tag() {
 		
