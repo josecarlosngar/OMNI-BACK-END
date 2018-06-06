@@ -161,4 +161,61 @@ public class PostDAO {
 	  try {con.close();} catch (SQLException e) {}
 	  }
 	}
+public List<Post> getPostsTag(int tagId) throws SQLException {
+	  //get connection from connection pool
+	  Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
+
+	  List<Post> posts = new ArrayList<Post>();
+	  Statement stmt = null;
+	  ResultSet rs = null;
+	  try {
+	    stmt = con.createStatement();
+
+	   
+	StringBuilder sb = new StringBuilder("select post.id as postId, post.text as text, post.creationDate as creationDate, post.edited as edited, ")
+	      .append("post.editionDate as editionDate, user.id as userId, user.username as username,")
+	      .append("user.password as password, user.name as name, user.surname as surname, ")
+	      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
+	      .append("from Post join User on post.userId=user.id ")
+	      .append("join `post-tag` on post.id = `post-tag`.postId where `post-tag`.postId="+tagId+" ")
+	      .append("order by post.creationDate");
+	//execute the query
+	    rs = stmt.executeQuery(sb.toString());
+
+	//iterate over result set and create Course objects
+	//add them to course list
+	    while (rs.next()) {
+	      Post post = new Post();
+	      int postId=rs.getInt("postId");
+	      post.setId(postId);
+	      post.setText(rs.getString("text"));
+	      post.setCreationDate(rs.getDate("creationDate"));
+	      post.setEditionDate(rs.getDate("editionDate"));
+	      post.setEdited(rs.getBoolean("edited"));
+	      
+	      User user= new User();
+	      user.setId(rs.getInt("userId"));
+	      user.setUsername(rs.getString("username"));
+	      user.setPassword(rs.getString("password"));
+	      user.setName(rs.getString("name"));
+	      user.setSurname(rs.getString("surname"));
+	      user.setEmail(rs.getString("email"));
+	      user.setRole(rs.getString("role"));
+	      user.setImage(rs.getString("image"));
+	      user.setRegistrationMoment(rs.getDate("registrationMoment"));
+	      post.setUser(user);
+	      
+	      List<Tag> tags=new ArrayList<Tag>();
+	      tags=Tag.getTagsPost(postId);
+	      post.setTags(tags);
+	      posts.add(post);
+	    }
+	    return posts;
+	  }
+	finally {
+	  try {if (rs != null) rs.close();} catch (SQLException e) {}
+	  try {if (stmt != null) stmt.close();} catch (SQLException e) {}
+	  try {con.close();} catch (SQLException e) {}
+	  }
+	}
 }

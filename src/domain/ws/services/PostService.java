@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -24,6 +25,20 @@ public class PostService {
 	 List<Post> res=new ArrayList<Post>();
 	try {
 		res = Post.getPosts();
+	} catch (SQLException e) {
+		res.add(new Post());
+	}
+	
+    return res;
+  }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("tag/{tagId}")
+  public List<Post> getPostsTag(@PathParam("tagId") int tagId) {
+	 List<Post> res=new ArrayList<Post>();
+	try {
+		res = Post.getPostsTag(tagId);
 	} catch (SQLException e) {
 		res.add(new Post());
 	}

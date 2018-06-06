@@ -30,6 +30,9 @@ public class Tag {
 	public static List<Tag> getTags() throws SQLException {
 		return tagDAO.getTags();
 	}
+	public static List<Tag> getPopTags(int number) throws SQLException{
+		return tagDAO.getPopTags(number);
+	}
 	public static List<Tag> getSearchTags(String search) throws SQLException {
 		return tagDAO.getSearchTags(search);
 	}
@@ -54,4 +57,5 @@ public class Tag {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 }

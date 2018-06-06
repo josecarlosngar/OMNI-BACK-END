@@ -12,6 +12,7 @@ import java.util.List;
 
 
 import database.DatabaseConnectionFactory;
+import domain.Post;
 import domain.Tag;
 import domain.User;
 
@@ -21,26 +22,27 @@ public class UserDAO {
 		  //get connection from connection pool
 		  Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
 
-		  User user=new User();
+		  List<User> users = new ArrayList<User>();
 		  Statement stmt = null;
 		  ResultSet rs = null;
 		  try {
 		    stmt = con.createStatement();
 
-		/*StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
+		StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
 			      .append("user.password as password, user.name as name, user.surname as surname, ")
 			      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
-			      .append("from User where user.email='"+email+"' and user.password='"+password+"' order by user.id");*/
+			      .append("from User where user.email='"+email+"' and user.password='"+password+"' order by user.id");
 		    
-		    StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
+		  /*  StringBuilder sb = new StringBuilder("select user.id as id, user.username as username,")
 		      .append("user.password as password, user.name as name, user.surname as surname, ")
 		      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
 		      .append("from User where user.email='Goku@dragonball.com' and user.password='goku' order by user.id");
-		//execute the query
+		*///execute the query
 		    rs = stmt.executeQuery(sb.toString());
 
 		
-		    
+		    while (rs.next()) {
+		    User user= new User();
 		      user.setId(rs.getInt("id"));
 		      user.setUsername(rs.getString("username"));
 		      user.setPassword(rs.getString("password"));
@@ -50,7 +52,10 @@ public class UserDAO {
 		      user.setRole(rs.getString("role"));
 		      user.setImage(rs.getString("image"));
 		      user.setRegistrationMoment(rs.getDate("registrationMoment"));
-		    return user;
+		      users.add(user);
+		    }
+		    return users.get(0);
+		    
 		  }
 		  finally {
 			  try {if (rs != null) rs.close();} catch (SQLException e) {}

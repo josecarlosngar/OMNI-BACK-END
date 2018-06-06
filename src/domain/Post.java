@@ -70,6 +70,9 @@ public class Post {
 	public static List<Post> getPosts() throws SQLException {
 		return postDAO.getPosts();
 	}
+	public static List<Post> getPostsTag(int tagId) throws SQLException{
+		return postDAO.getPostsTag(tagId);
+	}
 	
 	public int getId() {
 		return id;
@@ -133,4 +136,6 @@ public class Post {
 	public void setEdited(boolean edited) {
 		this.edited = edited;
 	}
+
+	
 }
