@@ -61,6 +61,7 @@ private static PostTagDAO postTagDAO = new PostTagDAO();
 	    //get connection from connection pool
 	    Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
 	    try {
+	    postTagDAO.removeAllPostTagsOfPost(id);
 	      final String sql = "Delete from Post where post.id = ?";
 	      
 	      PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -70,6 +71,7 @@ private static PostTagDAO postTagDAO = new PostTagDAO();
 
 	      stmt.execute();
 
+	      
 	      //Get auto-generated keys
 	      ResultSet rs = stmt.getGeneratedKeys();
 	      rs.close();
@@ -80,18 +82,26 @@ private static PostTagDAO postTagDAO = new PostTagDAO();
 	    }
 	  }
   
-  public static void updatePost (int id,String text) throws SQLException {
+  public static void updatePost (int postId,String text,List<Integer> tagIds) throws SQLException {
 	    //get connection from connection pool
 	    Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
 	    try {
-	      final String sql = "UPDATE Post SET post.text = ? where post.id = ?";
+	    postTagDAO.removeAllPostTagsOfPost(postId);
+	      final String sql = "UPDATE Post SET post.text = ?, post.editionDate = ? where post.id = ?";
 	      
 	      PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	      //set parameters
 	      stmt.setString(1, text);
-	      stmt.setInt(2, id);
+	      Date now=new Date();
+	      DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	      String editionMoment = df.format(now);
+	      stmt.setString(2, editionMoment);
+	      stmt.setInt(3, postId);
 
 	      stmt.execute();
+	      for(int tagId: tagIds) {
+	    		postTagDAO.addPostTag(postId, tagId);
+	    	}
 
 	      //Get auto-generated keys
 	      ResultSet rs = stmt.getGeneratedKeys();
@@ -124,7 +134,7 @@ private static PostTagDAO postTagDAO = new PostTagDAO();
 	      .append("user.password as password, user.name as name, user.surname as surname, ")
 	      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
 	      .append("from Post join User on post.userId=user.id ")
-	      .append("order by post.creationDate");
+	      .append("order by post.creationDate DESC");
 	//execute the query
 	    rs = stmt.executeQuery(sb.toString());
 
@@ -191,7 +201,7 @@ public List<Post> getPostsTag(int tagId) throws SQLException {
 	      .append("user.email as email, user.role as role, user.image as image, user.registrationMoment as registrationMoment ")
 	      .append("from Post join User on post.userId=user.id ")
 	      .append("join `post-tag` on post.id = `post-tag`.postId where `post-tag`.postId="+tagId+" ")
-	      .append("order by post.creationDate");
+	      .append("order by post.creationDate DESC");
 	//execute the query
 	    rs = stmt.executeQuery(sb.toString());
 
@@ -231,4 +241,5 @@ public List<Post> getPostsTag(int tagId) throws SQLException {
 	  try {con.close();} catch (SQLException e) {}
 	  }
 	}
+
 }

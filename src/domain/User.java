@@ -29,7 +29,7 @@ public class User {
 	private String surname;
 	@JsonIgnore
 	private String email;
-	@JsonIgnore
+	@XmlAttribute
 	private String role;
 	@XmlAttribute
 	private String image;

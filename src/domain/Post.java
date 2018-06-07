@@ -63,8 +63,8 @@ public class Post {
 	public static void removePost(int id) throws SQLException {
 		postDAO.removePost(id);
 	}
-	public static void updatePost(int id,String text) throws SQLException {
-		postDAO.updatePost(id,text);
+	public static void updatePost(int postId, String text, List<Integer> tagIds) throws SQLException {
+		postDAO.updatePost(postId,text,tagIds);
 	}
 
 	public static List<Post> getPosts() throws SQLException {
@@ -136,6 +136,8 @@ public class Post {
 	public void setEdited(boolean edited) {
 		this.edited = edited;
 	}
+
+	
 
 	
 }

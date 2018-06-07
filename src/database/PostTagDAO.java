@@ -48,4 +48,28 @@ public class PostTagDAO {
       con.close();
     }
   }
+
+public void removeAllPostTagsOfPost(int postId)throws SQLException {
+	  //get connection from connection pool
+    Connection con = DatabaseConnectionFactory.getConnectionFactory().getConnection();
+    try {
+      final String sql = "Delete from `post-tag` where `post-tag`.postId = ?";
+      
+      PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+      //set parameters
+   
+      stmt.setInt(1,postId);
+
+      stmt.execute();
+
+      //Get auto-generated keys
+      ResultSet rs = stmt.getGeneratedKeys();
+      rs.close();
+      stmt.close();
+    }
+    finally {
+      con.close();
+    }
+	
+}
 }
